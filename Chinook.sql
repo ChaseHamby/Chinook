@@ -107,7 +107,14 @@ SELECT count(*) as InvoiceLineItem
   GROUP BY t.Name, a.Name
   
 -- 14. `country_invoices.sql`: Provide a query that shows the # of invoices per country. HINT: [GROUP BY](https://docs.microsoft.com/en-us/sql/t-sql/queries/select-group-by-transact-sql)
-15. `playlists_track_count.sql`: Provide a query that shows the total number of tracks in each playlist. The Playlist name should be include on the resulant table.
+
+SELECT TOP (1000) 
+	  count(InvoiceId) as Invoices
+      ,BillingCountry
+  FROM Invoice
+  GROUP BY BillingCountry
+  
+-- 15. `playlists_track_count.sql`: Provide a query that shows the total number of tracks in each playlist. The Playlist name should be include on the resulant table.
 16. `tracks_no_id.sql`: Provide a query that shows all the Tracks, but displays no IDs. The result should include the Album name, Media type and Genre.
 17. `invoices_line_item_count.sql`: Provide a query that shows all Invoices but includes the # of invoice line items.
 18. `sales_agent_total_sales.sql`: Provide a query that shows total sales made by each sales agent.
