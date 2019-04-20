@@ -115,16 +115,64 @@ SELECT TOP (1000)
   GROUP BY BillingCountry
   
 -- 15. `playlists_track_count.sql`: Provide a query that shows the total number of tracks in each playlist. The Playlist name should be include on the resulant table.
-16. `tracks_no_id.sql`: Provide a query that shows all the Tracks, but displays no IDs. The result should include the Album name, Media type and Genre.
-17. `invoices_line_item_count.sql`: Provide a query that shows all Invoices but includes the # of invoice line items.
-18. `sales_agent_total_sales.sql`: Provide a query that shows total sales made by each sales agent.
-19. `top_2009_agent.sql`: Which sales agent made the most in sales in 2009? HINT: [MAX](https://docs.microsoft.com/en-us/sql/t-sql/functions/max-transact-sql)
-20. `top_agent.sql`: Which sales agent made the most in sales over all?
-21. `sales_agent_customer_count.sql`: Provide a query that shows the count of customers assigned to each sales agent.
-22. `sales_per_country.sql`: Provide a query that shows the total sales per country.
-23. `top_country.sql`: Which country's customers spent the most?
-24. `top_2013_track.sql`: Provide a query that shows the most purchased track of 2013.
-25. `top_5_tracks.sql`: Provide a query that shows the top 5 most purchased songs.
-26. `top_3_artists.sql`: Provide a query that shows the top 3 best selling artists.
-27. `top_media_type.sql`: Provide a query that shows the most purchased Media Type.
-*/
+
+SELECT p.[Name] as PlaylistName, count(pt.TrackId) as NumberOfTracks
+  from Playlist p, PlaylistTrack pt
+  where p.PlaylistId = pt.PlaylistId
+  group by p.[Name]
+
+-- 16. `tracks_no_id.sql`: Provide a query that shows all the Tracks, but displays no IDs. The result should include the Album name, Media type and Genre.
+
+SELECT t.Name as TrackName,g.Name as Genre,a.Title as AlbumTitle,m.Name as MediaType
+  from Track t, Genre g, Album a, MediaType m
+  where t.AlbumId = a.AlbumId
+  and t.MediaTypeId = m.MediaTypeId
+  and t.GenreId = g.GenreId
+  order by a.Title
+  
+-- 17. `invoices_line_item_count.sql`: Provide a query that shows all Invoices but includes the # of invoice line items.
+
+SELECT i.*, count(il.InvoiceLineId) as NumberOfLineItems
+	from Invoice i
+	join InvoiceLine il
+	on i.InvoiceId = il.InvoiceId
+	group by i.InvoiceId, i.CustomerId, i.BillingAddress, i.BillingCity, i.BillingCountry, i.BillingPostalCode, i.BillingState, i.InvoiceDate, i.Total
+
+-- 18. `sales_agent_total_sales.sql`: Provide a query that shows total sales made by each sales agent.
+
+SELECT e.EmployeeId, e.FirstName, e.LastName, sum(i.Total) as Sales
+  FROM Employee e
+  join Customer c on c.SupportRepId = e.EmployeeId
+  join Invoice i on c.CustomerId = i.CustomerId
+  where e.Title = 'Sales Support Agent'
+  group by e.EmployeeId, e.FirstName, e.LastName
+
+-- 19. `top_2009_agent.sql`: Which sales agent made the most in sales in 2009? HINT: [MAX](https://docs.microsoft.com/en-us/sql/t-sql/functions/max-transact-sql)
+
+SELECT e.EmployeeId, e.FirstName, e.LastName, sum(i.Total) as Sales
+  FROM Employee e
+  join Customer c on c.SupportRepId = e.EmployeeId
+  join Invoice i on c.CustomerId = i.CustomerId
+  where e.Title = 'Sales Support Agent'
+  and i.InvoiceDate between '2009-01-01' and '2009-12-31'
+  group by e.EmployeeId, e.FirstName, e.LastName
+
+-- 20. `top_agent.sql`: Which sales agent made the most in sales over all?
+
+SELECT TOP 1 e.EmployeeId, e.FirstName, e.LastName, sum(i.Total) as Sales
+  FROM Employee e
+  join Customer c on c.SupportRepId = e.EmployeeId
+  join Invoice i on c.CustomerId = i.CustomerId
+  where e.Title = 'Sales Support Agent'
+  group by e.EmployeeId, e.FirstName, e.LastName
+
+-- 21. `sales_agent_customer_count.sql`: Provide a query that shows the count of customers assigned to each sales agent.
+
+
+
+-- 22. `sales_per_country.sql`: Provide a query that shows the total sales per country.
+-- 23. `top_country.sql`: Which country's customers spent the most?
+-- 24. `top_2013_track.sql`: Provide a query that shows the most purchased track of 2013.
+-- 25. `top_5_tracks.sql`: Provide a query that shows the top 5 most purchased songs.
+-- 26. `top_3_artists.sql`: Provide a query that shows the top 3 best selling artists.
+-- 27. `top_media_type.sql`: Provide a query that shows the most purchased Media Type.
