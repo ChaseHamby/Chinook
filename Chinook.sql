@@ -168,10 +168,25 @@ SELECT TOP 1 e.EmployeeId, e.FirstName, e.LastName, sum(i.Total) as Sales
 
 -- 21. `sales_agent_customer_count.sql`: Provide a query that shows the count of customers assigned to each sales agent.
 
-
+SELECT e.EmployeeId, e.FirstName, e.LastName, count(c.CustomerId) as NumberOfCustomers
+  FROM Employee e
+  join Customer c on c.SupportRepId = e.EmployeeId
+  where e.Title = 'Sales Support Agent'
+  group by e.EmployeeId, e.FirstName, e.LastName
 
 -- 22. `sales_per_country.sql`: Provide a query that shows the total sales per country.
+
+SELECT i.BillingCountry, sum(i.Total) as TotalSales
+  from Invoice i
+  group by BillingCountry
+
 -- 23. `top_country.sql`: Which country's customers spent the most?
+
+SELECT i.BillingCountry, sum(i.Total) as TotalSales
+  from Invoice i
+  group by BillingCountry
+  order by BillingCountry desc
+  
 -- 24. `top_2013_track.sql`: Provide a query that shows the most purchased track of 2013.
 -- 25. `top_5_tracks.sql`: Provide a query that shows the top 5 most purchased songs.
 -- 26. `top_3_artists.sql`: Provide a query that shows the top 3 best selling artists.
